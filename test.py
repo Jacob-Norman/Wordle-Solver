@@ -36,6 +36,9 @@ def test(startWord):
 
         if tries > 6:
             tooManyTries.append(answer)
+
+        print(answer)
+        print(attempt + 1)
             
     totalTime = 0
     totalTries = 0

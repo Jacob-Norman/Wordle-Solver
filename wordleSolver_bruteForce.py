@@ -2,14 +2,34 @@ from wordList import wordleList
 from wordleGameSim import game
 from wordleSolver import possibleCheckList
 from wordleSolverFuncs import parseResult
+from wordleSolver_letterAlgo import letterScore
 
 import time as t
 
+# priorityList returns all letter in the alphabet in left to right order of which letters
+# occur in closest to half the words. It is very unlikely that any word that does not contain
+# at least on of the top two letters is going to be the best guess. This function eliminates
+# bad guesses from the wordle list so that we can increase the cap for where we use the brute force method
+def filterGuessWords(words: list[str]):
+    priorityList = letterScore(words)
+    reps = 0
+    filteredList: list[str] = []
+    for letter in priorityList:
+        for word in wordleList:
+            if letter in word and not(word in filteredList):
+                filteredList.append(word)
+        reps += 1
+        if reps >= 2:
+            break
+
+    return filteredList
+
 def bestGuess(remainingWords: list[str], guessedWords: list[str]):
-    remainingAmount = [0] * 2309
+    filteredList = filterGuessWords(remainingWords)
+    remainingAmount = [0] * len(filteredList)
     for answer in remainingWords:
         index = 0
-        for guess in wordleList:
+        for guess in filteredList:
             # Ensures that none of the guessed words are guessed again as wordle will not allow it
             if guess in guessedWords:
                 remainingAmount[index] = 1000000
@@ -22,9 +42,9 @@ def bestGuess(remainingWords: list[str], guessedWords: list[str]):
     
     min_val = min(remainingAmount)
     minGuesses: list[str] = []
-    for i in range(2309):
+    for i in range(len(filteredList)):
         if remainingAmount[i] == min_val:
-            minGuesses.append(wordleList[i])
+            minGuesses.append(filteredList[i])
     
     guess = "xxxxx"
     guessSet = False
