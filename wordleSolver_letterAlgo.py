@@ -1,4 +1,4 @@
-from wordList import wordleList
+from validList import validWords
 
 def letterScore(words: list[str]):
     occurrences = [0] * 26
@@ -31,7 +31,7 @@ def letterScore(words: list[str]):
     return priorityList
 
 def wordsContaining(letters: list[str]):
-    for word in wordleList:
+    for word in validWords:
         possible = True
         for letter in letters:
             if not(letter in word):

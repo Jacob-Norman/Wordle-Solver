@@ -17,7 +17,7 @@ def bestGuess(result: list[tuple], possibleWords: list[str], guessedWords: list[
 
         guessedWords.append(guess)
         return(guess, remainingWords, guessedWords)
-    elif len(remainingWords) <= 200:
+    elif len(remainingWords) <= 50:
         guess = bruteForce.bestGuess(remainingWords, guessedWords)
         guessedWords.append(guess)
         return(guess, remainingWords, guessedWords)

@@ -1,4 +1,4 @@
-from wordList import wordleList
+from validList import validWords
 from wordleGameSim import game
 from wordleSolver import possibleCheckList
 from wordleSolverFuncs import parseResult
@@ -13,7 +13,7 @@ import time as t
 def filterGuessWords(words: list[str]):
     priorityList = letterScore(words)
     filteredList: list[str] = []
-    for word in wordleList:
+    for word in validWords:
         if priorityList[0] in word or priorityList[1] in word:
             filteredList.append(word)
 
@@ -22,40 +22,19 @@ def filterGuessWords(words: list[str]):
 def bestGuess(remainingWords: list[str], guessedWords: list[str]):
     filteredList = filterGuessWords(remainingWords)
     remainingAmount = [0] * len(filteredList)
-    badGuess: list[str] = []
-    badGuessTemp: list[str] = []
-    badGuessCap = int(len(remainingWords) * 0.2)
-    # if there are more than 60 words remaining it is safe to apply the badGuess logic below
-    applyBadGuess = len(remainingWords) > 60
 
     for answer in remainingWords:
         index = 0
         for guess in filteredList:
             # Ensures that none of the guessed words are guessed again as wordle will not allow it
-            if guess in guessedWords or guess in badGuess:
-                remainingAmount[index] = 1000000
-                index += 1
-                continue
-            simResult = game(answer, guess)
-            result = parseResult(guess, simResult)
-            remainingWordsLen = len(possibleCheckList(result, remainingWords))
-            # If the guess leaves more than 20% of the words remaining on any answer then it is eliminated
-            # from simulating any further games to save time.
-            if applyBadGuess:
-                if remainingWordsLen <= badGuessCap:
-                    remainingAmount[index] += remainingWordsLen
-                else:
-                    badGuessTemp.append(guess)
+            if guess in guessedWords:
+                remainingAmount[index] = 10000000
             else:
+                simResult = game(answer, guess)
+                result = parseResult(guess, simResult)
+                remainingWordsLen = len(possibleCheckList(result, remainingWords))
                 remainingAmount[index] += remainingWordsLen 
-            index += 1
-
-        # If adding the badGuesses found from this answer to the existing bad Guesses results in at least 5
-        # words left as options in the filteredList then the badGuess list is updated
-
-        # Prevents a case where no guess is left.
-        if len(filteredList) - (len(badGuessTemp) + len(badGuess)) > 5:
-            badGuess += badGuessTemp
+                index += 1
     
     min_val = min(remainingAmount)
     minGuesses: list[str] = []
