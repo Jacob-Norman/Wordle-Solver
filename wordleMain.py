@@ -6,6 +6,7 @@ from time import sleep
 
 browser = wScrape.Browser()
 browser.loginWordle()
+wScrape.pageDown()
 
 guessWord = "crane"
 remainingWords = wordleList
@@ -21,5 +22,5 @@ for attempt in range(6):
     (guessWord, remainingWords, guessedWords) = wSolve.bestGuess(results, remainingWords, guessedWords)
     sleep(1)
 
-# allows the user to view the solved puzzle, Program will end when browser is closed anyway
+# allows the user to view the solved puzzle
 sleep(300)

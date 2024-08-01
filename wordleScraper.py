@@ -64,3 +64,7 @@ def checkWord(browser: Browser, row: int):
 		col = colMinus1 + 1
 		states.append(browser.getLetterResult(By.XPATH, '//*[@id="wordle-app-game"]/div[1]/div/div[' + str(row) + ']/div[' + str(col) + ']/div'))
 	return states
+
+def pageDown():
+	keyboard.press(Key.page_down)
+	keyboard.release(Key.page_down)
