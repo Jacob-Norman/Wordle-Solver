@@ -12,7 +12,7 @@ class Browser:
     
 	def __init__(self):
 		options_ = webdriver.ChromeOptions()
-		service_ = Service(ChromeDriverManager().install())
+		service_ = Service(r"chromedriver-win64\chromedriver.exe")
 		self.browser = webdriver.Chrome(service=service_, options=options_)
 
 	def waitForElement(self, by: By, value: str, timeout: int = 10):
