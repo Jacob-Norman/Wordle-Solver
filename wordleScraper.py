@@ -2,7 +2,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pynput.keyboard import Key, Controller
@@ -24,11 +23,8 @@ class Browser:
 	def closeBrowser(self):
 		self.browser.close()
 
-	def addInput(self, by: By, value: str, text:str):
-		field = self.browser.find_element(by=by, value=value)
-		field.send_keys(text)
-
 	def clickButton(self, by: By, value: str):
+		time.sleep(1)
 		self.waitForElement(by=by, value=value)
 		button = self.browser.find_element(by=by, value=value)
 		button.click()
@@ -37,13 +33,11 @@ class Browser:
 		element = self.browser.find_element(by=by, value=value)
 		return element.get_attribute("data-state")
 
-	def loginWordle(self, show: bool = True):
+	def loginWordle(self):
 		try:
 			self.openPage('https://www.nytimes.com/games/wordle/index.html')
-			self.clickButton(By.XPATH, '/html/body/div/div/div/div/div/div[2]/button[2]')
-			self.clickButton(By.XPATH, '//*[@id="help-dialog"]/div/div/button')
-			if not show:
-				self.browser.minimize_window()
+			self.clickButton(By.XPATH, '/html/body/div[2]/div/div/div/div/div[2]/button[2]')
+			self.clickButton(By.XPATH, '/html/body/div[2]/div/dialog/div/div/button')
 			time.sleep(1)
 		except:
 			print("Could Not Load Wordle.")
@@ -56,7 +50,6 @@ def typeWord(word: str):
 		keyboard.release(w)
 	keyboard.press(Key.enter)
 	keyboard.release(Key.enter)
-	time.sleep(1.5)
 
 def checkWord(browser: Browser, row: int):
 	states = []
@@ -64,3 +57,8 @@ def checkWord(browser: Browser, row: int):
 		col = colMinus1 + 1
 		states.append(browser.getLetterResult(By.XPATH, '//*[@id="wordle-app-game"]/div[1]/div/div[' + str(row) + ']/div[' + str(col) + ']/div'))
 	return states
+
+def pageDown():
+	keyboard.press(Key.page_down)
+	keyboard.release(Key.page_down)
+	time.sleep(0.1)

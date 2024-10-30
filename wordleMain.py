@@ -7,12 +7,15 @@ from time import sleep
 browser = wScrape.Browser()
 browser.loginWordle()
 
+wScrape.pageDown()
+
 guessWord = "crane"
 remainingWords = wordleList
 guessedWords: list[str] = []
 
 for attempt in range(6):
     wScrape.typeWord(guessWord)
+    sleep(1.5)
     webResults: list[tuple] = wScrape.checkWord(browser, attempt + 1)
     if not('absent' in webResults) and not('present' in webResults):
         print("The word of the day is:", guessWord)
